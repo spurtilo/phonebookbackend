@@ -2,6 +2,6 @@ POST http://localhost:3001/api/persons HTTP/1.1
 content-type: application/json
 
 {
-    "name": "Sauli Niinistö",
-    "number": "050 1111 222"
+    "name": "Alexander Stubb",
+    "number": "050 4343 222"
 }
