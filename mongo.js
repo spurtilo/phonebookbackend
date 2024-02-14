@@ -1,3 +1,4 @@
+require("dotenv").config();
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
@@ -5,8 +6,9 @@ const password = process.argv[2];
 const name = process.argv[3];
 const number = process.argv[4];
 
-const url = `mongodb+srv://simopurtilo:${password}@cluster0.0jx2apu.mongodb.net/phonebookApp?retryWrites=true&w=majority`;
+const url = process.env.MONGODB_URI;
 
+mongoose.set("strictQuery", false);
 mongoose.connect(url);
 
 const personSchema = new Schema({
