@@ -18,15 +18,6 @@ app.use(
   )
 );
 
-const errorHandler = (error, req, res, next) => {
-  console.error(error.message);
-
-  res.status(500).json({ error: "Internal Server Error" });
-
-  next(error);
-};
-app.use(errorHandler);
-
 app.get("/api/persons", (req, res) => {
   Person.find({})
     .then((persons) => {
@@ -103,6 +94,15 @@ app.delete("/api/persons/:id", (req, res, next) => {
     })
     .catch((error) => next(error));
 });
+
+const errorHandler = (error, req, res, next) => {
+  console.error(error.message);
+
+  res.status(500).json({ error: "Internal Server Error" });
+
+  next(error);
+};
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
