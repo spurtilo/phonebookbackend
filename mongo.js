@@ -1,10 +1,10 @@
 require("dotenv").config();
 const mongoose = require("mongoose");
+
 const { Schema } = mongoose;
 
-const password = process.argv[2];
-const name = process.argv[3];
-const number = process.argv[4];
+const name = process.argv[2];
+const number = process.argv[3];
 
 const url = process.env.MONGODB_URI;
 
@@ -20,11 +20,11 @@ const Person = mongoose.model("Person", personSchema);
 
 if (name && number) {
   const person = new Person({
-    name: name,
-    number: number,
+    name,
+    number,
   });
 
-  person.save().then((result) => {
+  person.save().then(() => {
     console.log(`Added ${name} number ${number} to phonebook.`);
 
     mongoose.connection.close();

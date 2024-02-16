@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+
 const { Schema } = mongoose;
 
 mongoose.set("strictQuery", false);
@@ -8,7 +9,7 @@ const url = process.env.MONGODB_URI;
 console.log("Connecting to", url);
 mongoose
   .connect(url)
-  .then((result) => {
+  .then(() => {
     console.log("Connected to MongoDB");
   })
   .catch((error) => {
@@ -24,7 +25,7 @@ const personSchema = new Schema({
   number: {
     type: String,
     validate: {
-      validator: function (n) {
+      validator: (n) => {
         return /\d{2,3}-\d{4,}/.test(n);
       },
       message: (props) => `NUMBER ${props.value} NOT VALID`,
@@ -35,9 +36,13 @@ const personSchema = new Schema({
 
 personSchema.set("toJSON", {
   transform: (document, returnedObject) => {
-    returnedObject.id = returnedObject._id.toString();
-    delete returnedObject._id;
-    delete returnedObject.__v;
+    const updatedObject = { ...returnedObject };
+
+    updatedObject.id = returnedObject._id.toString();
+    delete updatedObject._id;
+    delete updatedObject.__v;
+
+    return updatedObject;
   },
 });
 
