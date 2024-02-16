@@ -16,8 +16,21 @@ mongoose
   });
 
 const personSchema = new Schema({
-  name: String,
-  number: String,
+  name: {
+    type: String,
+    minlength: [3, "NAME TOO SHORT (min length 3)"],
+    required: [true, "NAME REQUIRED"],
+  },
+  number: {
+    type: String,
+    validate: {
+      validator: function (n) {
+        return /\d{2,3}-\d{4,}/.test(n);
+      },
+      message: (props) => `NUMBER ${props.value} NOT VALID`,
+    },
+    required: [true, "NUMBER REQUIRED"],
+  },
 });
 
 personSchema.set("toJSON", {

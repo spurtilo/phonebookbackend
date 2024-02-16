@@ -44,14 +44,8 @@ app.get("/info", (req, res) => {
     .catch((error) => next(error));
 });
 
-app.post("/api/persons/", (req, res) => {
+app.post("/api/persons/", (req, res, next) => {
   const body = req.body;
-
-  if (body.name.length === 0 || body.number.length === 0) {
-    return res.status(400).json({
-      error: "Name or number is missing.",
-    });
-  }
 
   const person = new Person({
     name: body.name,
@@ -67,20 +61,13 @@ app.post("/api/persons/", (req, res) => {
 });
 
 app.put("/api/persons/:id", (req, res, next) => {
-  const body = req.body;
+  const { name, number } = req.body;
 
-  if (body.name.length === 0 || body.number.length === 0) {
-    return res.status(400).json({
-      error: "Name or number is missing.",
-    });
-  }
-
-  const person = {
-    name: body.name,
-    number: body.number,
-  };
-
-  Person.findByIdAndUpdate(req.params.id, person, { new: true })
+  Person.findByIdAndUpdate(
+    req.params.id,
+    { name, number },
+    { new: true, runValidators: true }
+  )
     .then((updatedPerson) => {
       res.json(updatedPerson);
     })
@@ -97,6 +84,10 @@ app.delete("/api/persons/:id", (req, res, next) => {
 
 const errorHandler = (error, req, res, next) => {
   console.error(error.message);
+
+  if (error.name === "ValidationError") {
+    res.status(400).send({ error: error.message });
+  }
 
   res.status(500).json({ error: "Internal Server Error" });
 
